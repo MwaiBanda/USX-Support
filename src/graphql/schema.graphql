@@ -1,0 +1,216 @@
+"Apollo federation directives"
+scalar _FieldSet
+directive @key(fields: _FieldSet!, resolvable: Boolean = true) repeatable on OBJECT | INTERFACE
+directive @extends on OBJECT | INTERFACE
+
+# schema {
+#   query: Query
+# }
+
+"""
+Query Root
+"""
+type Query @extends {
+  bibleVersions(input: BibleVersionsInput): [BibleVersionListing]
+  bibleVersion(id: String!): BibleVersion
+  bibleBook(id: String!): BibleBook
+  bibleChapter(id: String!): BibleChapter
+}
+
+type BibleVersionListing{
+  id: String!
+  name: String!
+  localName: String!
+  displayAbbreviation: String!
+  copyright: String
+  publisherName: String
+  publisherLocalName: String
+  publisherUrl: String
+  language: BibleLanguage!
+  contractualText: String
+  active: Int!
+  offline: Int!
+  offline_location: String
+  offline_default: Int!
+  audio: Int!
+  extended_copyright: String!
+  audio_copyright: String!
+  show_extended_copyright: Int!
+  bookIds: [String]
+  books: [BibleBookStub]
+}
+
+type BibleVersion {
+  id: String!
+  name: String!
+  localName: String!
+  displayAbbreviation: String!
+  copyright: String
+  publisherName: String
+  publisherLocalName: String
+  publisherUrl: String
+  language: BibleLanguage!
+  contractualText: String
+  bookIds: [String]
+  books: [BibleBookStub]
+  active: Int!
+  offline: Int!
+  offline_location: String
+  offline_default: Int!
+  audio: Int!
+  extended_copyright: String!
+  audio_copyright: String!
+  show_extended_copyright: Int!
+}
+
+"""
+Book of the Bible.
+"""
+type BibleBook implements BiblePassage{
+  id: String!
+  abbreviations: [String]
+  shortName: String!
+  longName: String
+  numberOfChapters: Int!
+  intro: String
+  testament: String
+  code: String
+  section: BibleSection
+  chapters: [BibleChapter]
+}
+
+"""
+Book of the Bible. Chapters are not a direct child
+to limit query usage to how applications are more
+likely to use the API. Use bibleChapter or bibleBook
+on query root for full depth.
+"""
+type BibleBookStub{
+  id: String!
+  abbreviations: [String]
+  shortName: String!
+  longName: String
+  numberOfChapters: Int!
+  intro: String
+  section: BibleSection
+  code: String
+  testament: String
+  chapters: [BibleChapter]
+}
+
+type BibleChapter implements BiblePassage{
+  id: String!
+  chapterNumber: String!
+  verses(searchText: String): [BibleVerse]!
+  maxVerseNumber: Int!
+  xml: String!
+  footnote: [BibleFootnote]
+  copyright: String
+  contractualText: String
+  audio: ChapterAudio
+  book: BibleBookStub!
+  partialXml: String
+}
+
+type BibleChapterLimitted{
+  chapterNumber: String!
+  maxVerseNumber: Int!
+}
+
+type BibleFootnote{
+  xml: String
+  text: [String]
+  verseNumber: String!
+}
+
+type BibleVerse implements BiblePassage{
+  id: String!
+  verseNumberDisplay: String!
+  verseNumbers: [String]!
+  verseText: String
+  list_id: String!
+  xml: String
+  json: String
+  audio: VerseAudio
+}
+
+
+interface BibleAudio {
+  id: String!
+}
+
+type ChapterAudio implements BibleAudio{
+  id: String!
+  bookId: String
+  sourcePath: String
+  file: AudioFile
+  audioLength: Int
+  audio_copyright: String!
+}
+
+type VerseAudio{
+  audio: ChapterAudio
+  start_point: String
+  end_point: String
+}
+
+type AudioFile{
+  id: String
+  uri: String
+  url: String
+  size: Int
+}
+
+
+interface BiblePassage {
+  id: String!
+}
+
+type BibleLanguage {
+  id: String!
+  localName: String!
+  englishName: String!
+  direction: String!
+  languageCodes: [BibleLanguageCode]
+  macrolanguage: BibleMacrolanguage
+}
+
+type BibleMacrolanguage {
+  id: String!
+  localName: String!
+  englishName: String!
+  direction: String!
+  languageCodes: [BibleLanguageCode]
+}
+
+type BibleLanguageCode {
+  id: String
+  languageStandard: LanguageStandard
+}
+
+input BibleVersionsInput {
+  languageCode: String!
+  languageStandard: LanguageStandard
+}
+
+enum LanguageStandard {
+  ISO_639_1
+  ISO_639_2
+  ISO_639_3
+  CUSTOM
+  ANY
+}
+
+enum BibleSection {
+  OLD_TESTAMENT
+  NEW_TESTAMENT
+  DEUTEROCANONICAL
+}
+
+
+
+
+
+
+
+
