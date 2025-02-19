@@ -22,3 +22,20 @@ query BibleBook($id: String!) {
     }
 }
 `;
+
+
+export const GET_VERSIONS = gql`
+query BibleVersions {
+    bibleVersions {
+        id
+        name
+        displayAbbreviation
+        books {
+            id
+            shortName
+            longName
+            code
+        }
+    }
+}
+`;
