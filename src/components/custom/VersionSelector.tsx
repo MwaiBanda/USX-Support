@@ -18,14 +18,14 @@ export function VersionSelector({ versions }: { versions: BibleVersionsQuery | u
     const navigate = useNavigate()
     const { version, book, setVersion, setBook} = useContext(AppContext)
     useEffect(() => {
-        if (versions) {
+        if (versions && version == undefined) {
             const found = versions?.bibleVersions?.find((version) => version?.id.toLowerCase() === params.version) as BibleVersion
             setVersion(found)
         }
-    }, [params.version, versions])
+    }, [versions])
 
     useEffect(() => {
-        if (version) {
+        if (version && book == undefined) {
             setBook(version?.books?.find((book) => book?.code?.toLowerCase() === params.book) as BibleBookStub)
         }
     }, [version])

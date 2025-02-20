@@ -35,25 +35,28 @@ import { VersionSelector } from "./VersionSelector"
 import { Dialog } from "./Dialog"
 import { BibleVersionsQuery } from '../../graphql/__generated__/graphql';
 import { useState } from "react"
+import { Player } from '@lottiefiles/react-lottie-player';
 
 
 interface DataTableProps<T> {
   data: T[]
   columns: ColumnDef<T, any>[]
-  height?: number
   versions?: BibleVersionsQuery | undefined
+  filter?: "chapters" | "verses" | "books"
   showVersions?: boolean
   showSearch?: boolean
   showPaginator?: boolean
+  showColumns?: boolean
 }
 export function DataTable<T>({ 
   data, 
   columns, 
-  height, 
   versions, 
+  filter = "chapters",
   showVersions,
   showSearch,
   showPaginator,
+  showColumns = true
 }: DataTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -82,14 +85,14 @@ export function DataTable<T>({
       <div className="w-full">
         <div className="flex items-center pb-4">
           {showSearch && <Input
-            placeholder={`Search for ${showVersions ? "chapters" : "verses"}...`}
+            placeholder={`Search for ${filter}...`}
             value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               table.getColumn("name")?.setFilterValue(event.target.value)
             }
             className="max-w-sm"
           />}
-          {showPaginator && <div className="flex ml-auto space-x-2">
+          {showColumns && <div className="flex ml-auto space-x-2">
             {showVersions && <VersionSelector versions={versions} />}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -120,7 +123,7 @@ export function DataTable<T>({
           </div>}
 
         </div>
-        <div className={`rounded-md border ${height ? `min-h-[${530}px]` : ``}`}>
+        <div className={`rounded-md border min-h-[530px]`}>
           <Table>
             <TableHeader className="text-center">
               {table.getHeaderGroups().map((headerGroup) => (
@@ -159,12 +162,18 @@ export function DataTable<T>({
                   </TableRow>
                 ))
               ) : (
-                <TableRow>
+                <TableRow className="h-[400px]">
                   <TableCell
                     colSpan={columns.length}
-                    className="h-24 text-center"
+                    className=" "
                   >
-                    No results.
+                    <span className="m-auto"><Player
+                          autoplay={true}
+                          loop={true}
+                          speed={1}
+                          src={"https://lottie.host/9462621b-0d70-4a37-aba4-6bc8a578d08e/OYJBWVy48Q.json"}
+                          style={{ height: '150px', width: '40%', margin: 'auto' }}
+                        ></Player></span>
                   </TableCell>
                 </TableRow>
               )}

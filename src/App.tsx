@@ -7,13 +7,15 @@ import { DataTable } from './components/custom/DataTable';
 import { Chapter } from './model/Chapter';
 import { useState, createContext } from 'react';
 import { parseChapters } from './lib/praser';
-import { createChapterColumns, createChapterComboColumns } from './components/utils/columns';
+import { createChapterColumns } from './components/utils/columns';
 import { Player } from '@lottiefiles/react-lottie-player';
+import { BookTable } from './components/custom/BookTable';
 
 interface Context {
   chapter: Chapter | undefined;
   version: BibleVersion | undefined;
   book: BibleBookStub | undefined;
+  setChapter: (chapter: Chapter) => void;
   setVersion: (version: BibleVersion) => void;
   setBook: (book: BibleBookStub) => void;
 }
@@ -21,6 +23,7 @@ export const AppContext = createContext<Context>({
   chapter: undefined,
   version: undefined,
   book: undefined,
+  setChapter: () => { },
   setVersion: () => { },
   setBook: () => { }
 });
@@ -63,6 +66,7 @@ function App() {
       chapter: chapter,
       version: version,
       book: book,
+      setChapter: setChapter,
       setVersion: setVersion,
       setBook: setBook
     }}>
@@ -70,7 +74,6 @@ function App() {
         <DataTable
           data={chapters}
           versions={versions}
-          height={530}
           columns={createChapterColumns((chapter) => {
             setChapter(chapter)
           })}
@@ -78,16 +81,7 @@ function App() {
           showSearch
           showPaginator
         />
-        <DataTable data={[{
-          id: book?.id ?? "",
-          name: chapters[0]?.name.split(" ")[0] ?? "",
-          status: "unsupported",
-          tags: "",
-          unsupportedTags: [...new Set(chapters.flatMap((chapter) => chapter.unsupportedTags.split(",")))].join(", "),
-          metadata: chapters.filter((chapter) => chapter.status === "unsupported").flatMap((chapter) => chapter.metadata).filter((verse) => verse.status === "unsupported")
-        } as Chapter]} columns={createChapterComboColumns((chapter) => {
-          setChapter(chapter)
-        })} />
+        <BookTable />
       </div>
     </AppContext.Provider>
   )

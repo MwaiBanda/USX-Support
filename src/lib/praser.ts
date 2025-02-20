@@ -18,33 +18,33 @@ async function parseChapter(bibleBook: BibleBook, chapter: BibleChapter | null):
                                 id: `${bibleBook?.shortName} ${chapter?.chapterNumber}:${currentVerse}`,
                                 name: `${bibleBook?.shortName} ${chapter?.chapterNumber}:${currentVerse}`,
                                 tags: verseTags.join(", "),
-                                unsupportedTags: verseTags.filter((tag) => !supportedTags.includes(tag)).join(", "),
+                                unsupportedTags: verseTags.filter((tag) => !supportedTags.includes(tag)).filter((tag) => tag !== "").join(", "),
                                 status: verseTags.filter((tag) => !supportedTags.includes(tag)).length > 0 ? "unsupported" : "supported",
                             })
                             verseTags = []
                         }
                         currentVerse += 1
-                        if (!tags.includes(attributes.style)) {
+                        if (!tags.includes(attributes.style) && attributes.style.length > 0) {
                             tags.push(attributes.style)
                         }
-                        if (!verseTags.includes(attributes.style)) {
+                        if (!verseTags.includes(attributes.style) && attributes.style.length > 0) {
                             verseTags.push(attributes.style)
                         }
                         break
                     case "para":
-                        if (!tags.includes(attributes.style)) {
+                        if (!tags.includes(attributes.style) && attributes.style.length > 0) {
                             tags.push(attributes.style)
                         }
-                        if (!verseTags.includes(attributes.style)) {
+                        if (!verseTags.includes(attributes.style) && attributes.style.length > 0) {
                             verseTags.push(attributes.style)
                         }
                         break
 
                     case "char":
-                        if (!tags.includes(attributes.style)) {
+                        if (!tags.includes(attributes.style) && attributes.style.length > 0) {
                             tags.push(attributes.style)
                         }
-                        if (!verseTags.includes(attributes.style)) {
+                        if (!verseTags.includes(attributes.style) && attributes.style.length > 0) {
                             verseTags.push(attributes.style)
                         }
                         break
@@ -63,7 +63,7 @@ async function parseChapter(bibleBook: BibleBook, chapter: BibleChapter | null):
                         name: `${bibleBook?.shortName} ${chapter?.chapterNumber}`,
                         tags: tags.join(", "),
                         status: tags.filter((tag) => !supportedTags.includes(tag)).length > 0 ? "unsupported" : "supported",
-                        unsupportedTags: tags.filter((tag) => !supportedTags.includes(tag)).join(", "),
+                        unsupportedTags: tags.filter((tag) => !supportedTags.includes(tag)).filter((tag) => tag !== "").join(", "),
                         metadata: verses,
                     })
                 }

@@ -3,11 +3,12 @@ export const supportedTags = [
     "p",
     "v",
     "qs",
+    "lit",
     "d",
     "q1",
     "q2",
     "wj",
-    "li",
+    "li1",
     "pmo",
     "pm",
     "qr",
@@ -15,5 +16,5 @@ export const supportedTags = [
     "sc",
     "tb",
     "cl",
-    "it",
+    "sp"
 ]

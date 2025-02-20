@@ -27,7 +27,8 @@ export function Dialog({ children }: { children: React.ReactNode }) {
                     <div className="">
                         <DataTable 
                         data={chapter?.metadata ?? []} 
-                        columns={createVerseColumns()} height={530}
+                        columns={createVerseColumns()} 
+                        filter="verses"
                         showSearch
                         showPaginator
                     />
