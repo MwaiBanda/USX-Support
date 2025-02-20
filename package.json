@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite && graphql-codegen",
-    "build": "tsc -b && vite build && graphql-codegen",
+    "dev": "graphql-codegen && vite",
+    "build": "graphql-codegen && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
