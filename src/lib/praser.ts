@@ -1,3 +1,4 @@
+import { supportedTags } from "@/components/utils/tags";
 import { BibleBook, BibleChapter } from "@/graphql/__generated__/graphql";
 import { Chapter, VerseMetadata } from "@/model/Chapter";
 import * as htmlparser2 from "htmlparser2";
@@ -17,7 +18,8 @@ async function parseChapter(bibleBook: BibleBook, chapter: BibleChapter | null):
                                 id: `${bibleBook?.shortName} ${chapter?.chapterNumber}:${currentVerse}`,
                                 name: `${bibleBook?.shortName} ${chapter?.chapterNumber}:${currentVerse}`,
                                 tags: verseTags.join(", "),
-                                status: "unsupported",
+                                unsupportedTags: verseTags.filter((tag) => !supportedTags.includes(tag)).join(", "),
+                                status: verseTags.filter((tag) => !supportedTags.includes(tag)).length > 0 ? "unsupported" : "supported",
                             })
                             verseTags = []
                         }
@@ -60,7 +62,8 @@ async function parseChapter(bibleBook: BibleBook, chapter: BibleChapter | null):
                         id: chapter?.id ?? "",
                         name: `${bibleBook?.shortName} ${chapter?.chapterNumber}`,
                         tags: tags.join(", "),
-                        status: "unsupported",
+                        status: tags.filter((tag) => !supportedTags.includes(tag)).length > 0 ? "unsupported" : "supported",
+                        unsupportedTags: tags.filter((tag) => !supportedTags.includes(tag)).join(", "),
                         metadata: verses,
                     })
                 }

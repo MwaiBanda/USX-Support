@@ -9,14 +9,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { BibleBookStub, BibleVersion, BibleVersionsQuery } from "@/graphql/__generated__/graphql"
-import { useEffect, useState } from "react"
+import { useContext, useEffect } from "react"
 import { Skeleton } from "../ui/skeleton"
+import { AppContext } from "@/App"
 
 export function VersionSelector({ versions }: { versions: BibleVersionsQuery | undefined }) {
     const params = useParams()
     const navigate = useNavigate()
-    const [version, setVersion] = useState<BibleVersion | undefined>(undefined)
-    const [book, setBook] = useState<BibleBookStub | undefined>(undefined)
+    const { version, book, setVersion, setBook} = useContext(AppContext)
     useEffect(() => {
         if (versions) {
             const found = versions?.bibleVersions?.find((version) => version?.id.toLowerCase() === params.version) as BibleVersion
@@ -39,7 +39,7 @@ export function VersionSelector({ versions }: { versions: BibleVersionsQuery | u
               <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="h-[500px] overflow-scroll" align="end">
+          <DropdownMenuContent className="h-[500px] overflow-scroll scroll-smooth scrollbar-thin scrollbar-thumb-rounded-full scrollbar" align="end">
             {versions?.bibleVersions?.map((version) => (
               <DropdownMenuCheckboxItem 
               key={version?.id} 
@@ -64,7 +64,7 @@ export function VersionSelector({ versions }: { versions: BibleVersionsQuery | u
               <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="h-[500px] overflow-scroll" align="end">
+          <DropdownMenuContent className="h-[500px] overflow-scroll scroll-smooth scrollbar-thin scrollbar-thumb-rounded-full scrollbar" align="end">
             {version?.books?.map((book) => (
               <DropdownMenuCheckboxItem 
               key={book?.id} 
