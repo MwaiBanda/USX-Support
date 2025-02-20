@@ -1,12 +1,12 @@
 import { Chapter } from "@/model/Chapter"
 import { DataTable } from "./DataTable"
-import { BibleBook, BibleBookQuery, BibleBookQueryVariables, BibleBookStub, BibleVersion } from "@/graphql/__generated__/graphql"
+import { BibleBook, BibleBookQuery, BibleBookQueryVariables, BibleBookStub } from "@/graphql/__generated__/graphql"
 import { createChapterComboColumns } from "../utils/columns"
 import { useContext, useEffect, useState } from "react"
 import { AppContext } from "@/App"
 import { parseChapters } from "@/lib/praser"
 import { GET_CHAPTERS } from "@/graphql/queries.graphql"
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 
 interface BookTableProps {
 }
