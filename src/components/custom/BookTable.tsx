@@ -63,7 +63,8 @@ export function BookTable({  }: BookTableProps) {
     , 1000)
     }, [book])
 
-    return <DataTable data={chapters} columns={createChapterComboColumns((chapter) => {
+    return <div>
+    <DataTable data={chapters} columns={createChapterComboColumns("Book", (chapter) => {
         setChapter(chapter)
     })}
         filter="books"
@@ -71,4 +72,23 @@ export function BookTable({  }: BookTableProps) {
         showPaginator
         showColumns={false}
     />
+    <DataTable data={chapters.length == 0 ? [] :[
+        {
+            id: "",
+            name: `${version?.name ?? ""} (${version?.displayAbbreviation ?? ""})`,
+            status: "unsupported",
+            tags: "",
+            unsupportedTags: [...new Set(chapters.flatMap((chapter) => chapter.unsupportedTags.split(",").map((tag) => tag.trim())))].filter((tag) => tag !== "").join(", "),
+            metadata: chapters.filter((chapter) => chapter.status === "unsupported").flatMap((chapter) => chapter.metadata).filter((verse) => verse.status === "unsupported")
+        } as Chapter
+    ]} columns={createChapterComboColumns("Version", (chapter) => {
+        setChapter(chapter)
+    })}
+        filter="books"
+        showSearch={false}
+        showPaginator={false}
+        showColumns={false}
+        height={100}
+    />
+    </div>
 }

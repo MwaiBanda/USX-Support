@@ -47,16 +47,18 @@ interface DataTableProps<T> {
   showSearch?: boolean
   showPaginator?: boolean
   showColumns?: boolean
+  height?: number
 }
-export function DataTable<T>({ 
-  data, 
-  columns, 
-  versions, 
+export function DataTable<T>({
+  data,
+  columns,
+  versions,
   filter = "chapters",
   showVersions,
   showSearch,
   showPaginator,
-  showColumns = true
+  showColumns = true,
+  height = 530
 }: DataTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -84,14 +86,7 @@ export function DataTable<T>({
     <Dialog children={
       <div className="w-full">
         <div className="flex items-center pb-4">
-          {showSearch && <Input
-            placeholder={`Search for ${filter}...`}
-            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              table.getColumn("name")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />}
+          <SearchBar filter={filter} showSearch={showSearch ?? false} table={table} />
           {showColumns && <div className="flex ml-auto space-x-2">
             {showVersions && <VersionSelector versions={versions} />}
             <DropdownMenu>
@@ -123,7 +118,7 @@ export function DataTable<T>({
           </div>}
 
         </div>
-        <div className={`rounded-md border min-h-[530px]`}>
+        <div className={`rounded-md border min-h-[${height ?? 0}px]`}>
           <Table>
             <TableHeader className="text-center">
               {table.getHeaderGroups().map((headerGroup) => (
@@ -168,12 +163,12 @@ export function DataTable<T>({
                     className=" "
                   >
                     <span className="m-auto"><Player
-                          autoplay={true}
-                          loop={true}
-                          speed={1}
-                          src={"https://lottie.host/9462621b-0d70-4a37-aba4-6bc8a578d08e/OYJBWVy48Q.json"}
-                          style={{ height: '150px', width: '40%', margin: 'auto' }}
-                        ></Player></span>
+                      autoplay={true}
+                      loop={true}
+                      speed={1}
+                      src={"https://lottie.host/9462621b-0d70-4a37-aba4-6bc8a578d08e/OYJBWVy48Q.json"}
+                      style={{ height: '150px', width: '40%', margin: 'auto' }}
+                    ></Player></span>
                   </TableCell>
                 </TableRow>
               )}
@@ -213,6 +208,35 @@ export function DataTable<T>({
       </div>
     } />
   )
+}
+
+function SearchBar({ filter, showSearch, table }: { filter: string, showSearch: boolean, table: any }) {
+  if (showSearch){
+    switch (filter) {
+      case "verses":
+        return (
+          <Input
+            placeholder={`Search for unsupported tags...`}
+            value={(table.getColumn("unsupportedTags")?.getFilterValue() as string) ?? ""}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              table.getColumn("unsupportedTags")?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+        )
+      default:
+        return (
+          <Input
+            placeholder={`Search for ${filter}...`}
+            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              table.getColumn("name")?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+        )
+      }
+  }
 }
 
 

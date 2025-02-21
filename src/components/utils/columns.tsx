@@ -105,7 +105,7 @@ export function createChapterColumns(onShowDialog: (chapter: Chapter) => void): 
   
 }
 
-export function createChapterComboColumns(onShowDialog: (chapter: Chapter) => void): ColumnDef<Chapter, any[]>[] { 
+export function createChapterComboColumns(type: "Book" | "Version", onShowDialog: (chapter: Chapter) => void): ColumnDef<Chapter, any[]>[] { 
   return [ 
     {
       accessorKey: "status",
@@ -117,7 +117,7 @@ export function createChapterComboColumns(onShowDialog: (chapter: Chapter) => vo
     },
     {
       accessorKey: "name",
-      header: () => <div className="text-center">Book</div>,
+      header: () => <div className="text-center">{type}</div>,
       cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
     },
     {
@@ -152,7 +152,7 @@ export function createChapterComboColumns(onShowDialog: (chapter: Chapter) => vo
               <DialogTrigger asChild>
                     <DropdownMenuItem onClick={() => {
                       onShowDialog(chapter)
-                    }}>View book details</DropdownMenuItem>
+                    }}>View {type.toLowerCase()} details</DropdownMenuItem>
               </DialogTrigger>
             </DropdownMenuContent>
           </DropdownMenu>
